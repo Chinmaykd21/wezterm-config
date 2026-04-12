@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
+local bar = wezterm.plugin.require("https://github.com/adriankarlen/bar.wezterm")
 local sessionizer = wezterm.plugin.require("https://github.com/mikkasendke/sessionizer.wezterm")
 
 -- Define project behaviors
@@ -10,7 +11,7 @@ local project_configs = {
             -- Pane 1: Top Left (Backend API server)
             { cwd = ".", cmd = "pnpm docker:dev:build" },
             -- Pane 2: Top Right (Drizzle Database Studio)
-            { cwd = ".", cmd = "pnpm docker:studio" },
+            { cwd = ".", cmd = "pnpm db:studio" },
             -- Pane 3: Bottom Left (Stripe Webhook Listener)
             { cwd = ".", cmd = "stripe listen --forward-to localhost:4300/webhook/stripe" },
             -- Pane 4: Bottom Right (Frontend)
@@ -40,6 +41,7 @@ config.window_background_opacity = 0.8
 config.macos_window_background_blur = 30
 
 -- tab config
+bar.apply_to_config(config)
 
 -- functions
 -- Logic to automate the 4-pane layout
@@ -83,6 +85,7 @@ config.keys = {
         mods = "CMD|SHIFT",
         action = wezterm.action.SplitPane({ direction = "Down" }),
     },
+    -- Set command + p to open the project selector
     {
         key = "p",
         mods = "CMD",
